@@ -163,6 +163,57 @@ body {
   background: rgba(254, 252, 232, 0.95);
 }
 
+.layout-with-sidebar {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 180px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #f8fafc;
+  cursor: pointer;
+}
+
+.sidebar button.active {
+  background: rgba(255,255,255,0.16);
+  font-weight: 700;
+}
+
+.main {
+  flex: 1;
+}
+
+.fav-btn {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #cbd5e1;
+}
+
+.fav-btn.active {
+  color: #ef4444;
+}
+
 @media (max-width: 1040px) {
   .layout {
     grid-template-columns: 1fr;

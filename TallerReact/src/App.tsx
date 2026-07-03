@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import SearchBar from './components/SearchBar'
+import Sidebar from './components/Sidebar'
+import FavoritesPage from './components/FavoritesPage'
 
 export interface Digimon {
   name: string
@@ -14,6 +16,15 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [page, setPage] = useState<'explore' | 'favorites'>('explore')
+  const [favorites, setFavorites] = useState<Digimon[]>(() => {
+    try {
+      const raw = localStorage.getItem('favorites')
+      return raw ? (JSON.parse(raw) as Digimon[]) : []
+    } catch {
+      return []
+    }
+  })
 
   useEffect(() => {
     const controller = new AbortController()
@@ -46,35 +57,65 @@ export default function App() {
     return digimon.filter((item) => item.name.toLowerCase().includes(term))
   }, [digimon, search])
 
+  useEffect(() => {
+    try {
+      localStorage.setItem('favorites', JSON.stringify(favorites))
+    } catch {}
+  }, [favorites])
+
+  const toggleFavorite = (item: Digimon) => {
+    setFavorites((prev) => {
+      const exists = prev.some((p) => p.name === item.name)
+      if (exists) return prev.filter((p) => p.name !== item.name)
+      return [...prev, item]
+    })
+  }
+
   return (
-    <div className="app">
-      <section className="page-title">
-        <h1>Digimon Explorer</h1>
-      </section>
+    <div className="app layout-with-sidebar">
+      <Sidebar current={page} onNavigate={setPage} />
 
-      <div className="controls">
-        <SearchBar value={search} onChange={setSearch} />
-      </div>
+      <main className="main">
+        <section className="page-title">
+          <h1>Digimon Explorer</h1>
+        </section>
 
-      {loading ? (
-        <div className="status-message">Cargando Digimon...</div>
-      ) : error ? (
-        <div className="status-message status-error">{error}</div>
-      ) : filteredDigimon.length === 0 ? (
-        <div className="status-message">No se encontraron Digimon para "{search}".</div>
-      ) : (
-        <div className="card-grid">
-          {filteredDigimon.map((item) => (
-            <article key={item.name} className="card">
-              <img src={item.img} alt={item.name} />
-              <div className="card-body">
-                <h2 className="card-title">{item.name}</h2>
-                <p className="card-meta">Nivel: {item.level}</p>
-              </div>
-            </article>
-          ))}
+        <div className="controls">
+          <SearchBar value={search} onChange={setSearch} />
         </div>
-      )}
+
+        {loading ? (
+          <div className="status-message">Cargando Digimon...</div>
+        ) : error ? (
+          <div className="status-message status-error">{error}</div>
+        ) : page === 'favorites' ? (
+          <FavoritesPage items={favorites} onToggle={toggleFavorite} />
+        ) : filteredDigimon.length === 0 ? (
+          <div className="status-message">No se encontraron Digimon para "{search}".</div>
+        ) : (
+          <div className="card-grid">
+            {filteredDigimon.map((item) => {
+              const isFav = favorites.some((f) => f.name === item.name)
+              return (
+                <article key={item.name} className="card">
+                  <img src={item.img} alt={item.name} />
+                  <div className="card-body">
+                    <h2 className="card-title">{item.name}</h2>
+                    <p className="card-meta">Nivel: {item.level}</p>
+                    <button
+                      className={"fav-btn" + (isFav ? ' active' : '')}
+                      onClick={() => toggleFavorite(item)}
+                      aria-label={`${isFav ? 'Quitar' : 'Agregar'} ${item.name} de favoritos`}
+                    >
+                      ♥
+                    </button>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        )}
+      </main>
     </div>
   )
 }
