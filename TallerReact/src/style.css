@@ -214,6 +214,22 @@ body {
   color: #ef4444;
 }
 
+.block-btn {
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #cbd5e1;
+  margin-left: 8px;
+}
+
+.block-btn.active {
+  color: #0f172a;
+  background: #fde047;
+  border-radius: 8px;
+  padding: 6px;
+}
+
 @media (max-width: 1040px) {
   .layout {
     grid-template-columns: 1fr;

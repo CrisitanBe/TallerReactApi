@@ -1,6 +1,6 @@
 interface SidebarProps {
-  current: 'explore' | 'favorites'
-  onNavigate: (page: 'explore' | 'favorites') => void
+  current: 'explore' | 'favorites' | 'blocked'
+  onNavigate: (page: 'explore' | 'favorites' | 'blocked') => void
 }
 
 export default function Sidebar({ current, onNavigate }: SidebarProps) {
@@ -21,6 +21,14 @@ export default function Sidebar({ current, onNavigate }: SidebarProps) {
             onClick={() => onNavigate('favorites')}
           >
             Favoritos
+          </button>
+        </li>
+        <li>
+          <button
+            className={current === 'blocked' ? 'active' : ''}
+            onClick={() => onNavigate('blocked')}
+          >
+            Bloqueados
           </button>
         </li>
       </ul>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import SearchBar from './components/SearchBar'
 import Sidebar from './components/Sidebar'
 import FavoritesPage from './components/FavoritesPage'
+import BlockedPage from './components/BlockedPage'
 
 export interface Digimon {
   name: string
@@ -16,7 +17,7 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [page, setPage] = useState<'explore' | 'favorites'>('explore')
+  const [page, setPage] = useState<'explore' | 'favorites' | 'blocked'>('explore')
   const [favorites, setFavorites] = useState<Digimon[]>(() => {
     try {
       const raw = localStorage.getItem('favorites')
@@ -71,6 +72,31 @@ export default function App() {
     })
   }
 
+  const [blocked, setBlocked] = useState<Digimon[]>(() => {
+    try {
+      const raw = localStorage.getItem('blocked')
+      return raw ? (JSON.parse(raw) as Digimon[]) : []
+    } catch {
+      return []
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('blocked', JSON.stringify(blocked))
+    } catch {}
+  }, [blocked])
+
+  const toggleBlocked = (item: Digimon) => {
+    setBlocked((prev) => {
+      const exists = prev.some((p) => p.name === item.name)
+      if (exists) return prev.filter((p) => p.name !== item.name)
+      return [...prev, item]
+    })
+    // si bloqueamos, quitar de favoritos
+    setFavorites((prev) => prev.filter((p) => p.name !== item.name))
+  }
+
   return (
     <div className="app layout-with-sidebar">
       <Sidebar current={page} onNavigate={setPage} />
@@ -90,29 +116,43 @@ export default function App() {
           <div className="status-message status-error">{error}</div>
         ) : page === 'favorites' ? (
           <FavoritesPage items={favorites} onToggle={toggleFavorite} />
+        ) : page === 'blocked' ? (
+          <BlockedPage items={blocked} onToggle={toggleBlocked} />
         ) : filteredDigimon.length === 0 ? (
           <div className="status-message">No se encontraron Digimon para "{search}".</div>
         ) : (
           <div className="card-grid">
-            {filteredDigimon.map((item) => {
-              const isFav = favorites.some((f) => f.name === item.name)
-              return (
-                <article key={item.name} className="card">
-                  <img src={item.img} alt={item.name} />
-                  <div className="card-body">
-                    <h2 className="card-title">{item.name}</h2>
-                    <p className="card-meta">Nivel: {item.level}</p>
-                    <button
-                      className={"fav-btn" + (isFav ? ' active' : '')}
-                      onClick={() => toggleFavorite(item)}
-                      aria-label={`${isFav ? 'Quitar' : 'Agregar'} ${item.name} de favoritos`}
-                    >
-                      ♥
-                    </button>
-                  </div>
-                </article>
-              )
-            })}
+            {filteredDigimon
+              .filter((item) => !blocked.some((b) => b.name === item.name))
+              .map((item) => {
+                const isFav = favorites.some((f) => f.name === item.name)
+                const isBlocked = blocked.some((b) => b.name === item.name)
+                return (
+                  <article key={item.name} className="card">
+                    <img src={item.img} alt={item.name} />
+                    <div className="card-body">
+                      <h2 className="card-title">{item.name}</h2>
+                      <p className="card-meta">Nivel: {item.level}</p>
+                      <div className="card-buttons">
+                        <button
+                          className={"fav-btn" + (isFav ? ' active' : '')}
+                          onClick={() => toggleFavorite(item)}
+                          aria-label={`${isFav ? 'Quitar' : 'Agregar'} ${item.name} de favoritos`}
+                        >
+                          ♥
+                        </button>
+                        <button
+                          className={"block-btn" + (isBlocked ? ' active' : '')}
+                          onClick={() => toggleBlocked(item)}
+                          aria-label={`${isBlocked ? 'Desbloquear' : 'Bloquear'} ${item.name}`}
+                        >
+                          {isBlocked ? '🔓' : '🔒'}
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
           </div>
         )}
       </main>
