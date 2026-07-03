@@ -267,22 +267,201 @@ body {
   padding: 6px;
 }
 
-@media (max-width: 1040px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
+.footer {
+  margin-top: 60px;
+  padding: 40px 24px;
+  background: rgba(15, 23, 42, 0.6);
+  border-top: 1px solid rgba(248, 250, 252, 0.1);
+  border-radius: 16px;
+  text-align: center;
 }
 
-@media (max-width: 640px) {
-  #app {
-    padding: 14px;
+.footer-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.footer-text {
+  margin: 0 0 12px 0;
+  color: #f8fafc;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.members-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  font-size: 0.9rem;
+}
+
+.members-list li {
+  color: #e0f2fe;
+  font-weight: 500;
+}
+
+/* Responsividad */
+
+/* Tablet (hasta 1024px) */
+@media (max-width: 1024px) {
+  .layout-with-sidebar {
+    gap: 16px;
+  }
+
+  .sidebar {
+    width: 160px;
+  }
+
+  .page-title h1 {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
   }
 
   .card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  }
+}
+
+/* Dispositivos medianos (hasta 768px) */
+@media (max-width: 768px) {
+  #app {
+    padding: 16px;
   }
 
-  .stats {
+  .app {
+    max-width: 100%;
+  }
+
+  .layout-with-sidebar {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .sidebar ul {
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .sidebar button {
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+  }
+
+  .page-title h1 {
+    font-size: clamp(1.6rem, 2.5vw, 2rem);
+  }
+
+  .controls {
+    margin-bottom: 16px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .footer {
+    margin-top: 40px;
+    padding: 30px 16px;
+  }
+
+  .members-list {
+    gap: 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Móviles (hasta 480px) */
+@media (max-width: 480px) {
+  #app {
+    padding: 12px;
+  }
+
+  .page-title {
+    margin-bottom: 16px;
+  }
+
+  .page-title h1 {
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+  }
+
+  .controls {
+    margin-bottom: 12px;
+  }
+
+  .search-box input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .card-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    border-radius: 16px;
+  }
+
+  .card-body {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-meta {
+    font-size: 0.9rem;
+  }
+
+  .card-buttons {
+    gap: 8px;
+  }
+
+  .fav-btn,
+  .block-btn {
+    font-size: 1.1rem;
+  }
+
+  .status-message {
+    padding: 30px 16px;
+    font-size: 0.95rem;
+  }
+
+  .footer {
+    margin-top: 30px;
+    padding: 24px 12px;
+  }
+
+  .footer-text {
+    font-size: 0.85rem;
+  }
+
+  .members-list {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.8rem;
+  }
+
+  .sidebar ul {
+    flex-direction: column;
+  }
+
+  .sidebar button {
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 0.9rem;
+    min-width: unset;
   }
 }

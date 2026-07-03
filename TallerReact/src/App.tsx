@@ -3,6 +3,7 @@ import SearchBar from './components/SearchBar'
 import Sidebar from './components/Sidebar'
 import FavoritesPage from './components/FavoritesPage'
 import BlockedPage from './components/BlockedPage'
+import Footer from './components/Footer'
 
 export interface Digimon {
   name: string
@@ -156,6 +157,7 @@ export default function App() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   )
 }
