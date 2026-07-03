@@ -3,11 +3,35 @@ import type { Digimon } from '../App'
 interface BlockedPageProps {
   items: Digimon[]
   onToggle: (item: Digimon) => void
+  loading?: boolean
+  error?: string | null
 }
 
-export default function BlockedPage({ items, onToggle }: BlockedPageProps) {
+export default function BlockedPage({
+  items,
+  onToggle,
+  loading = false,
+  error = null,
+}: BlockedPageProps) {
+  if (loading) {
+    return (
+      <div className="status-message">
+        <div className="spinner">Cargando bloqueados...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="status-message status-error">
+        <strong>⚠️ Error</strong>
+        <p>{error}</p>
+      </div>
+    )
+  }
+
   if (items.length === 0) {
-    return <div className="status-message">No hay Digimon bloqueados.</div>
+    return <div className="status-message">🔓 No hay Digimon bloqueados.</div>
   }
 
   return (
@@ -18,7 +42,11 @@ export default function BlockedPage({ items, onToggle }: BlockedPageProps) {
           <div className="card-body">
             <h2 className="card-title">{item.name}</h2>
             <p className="card-meta">Nivel: {item.level}</p>
-            <button className="block-btn active" onClick={() => onToggle(item)} aria-label={`Desbloquear ${item.name}`}>
+            <button
+              className="block-btn active"
+              onClick={() => onToggle(item)}
+              aria-label={`Desbloquear ${item.name}`}
+            >
               🔓
             </button>
           </div>

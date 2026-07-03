@@ -110,14 +110,14 @@ export default function App() {
           <SearchBar value={search} onChange={setSearch} />
         </div>
 
-        {loading ? (
+        {loading && page === 'explore' ? (
           <div className="status-message">Cargando Digimon...</div>
-        ) : error ? (
+        ) : error && page === 'explore' ? (
           <div className="status-message status-error">{error}</div>
         ) : page === 'favorites' ? (
-          <FavoritesPage items={favorites} onToggle={toggleFavorite} />
+          <FavoritesPage items={favorites} onToggle={toggleFavorite} loading={loading} error={error} />
         ) : page === 'blocked' ? (
-          <BlockedPage items={blocked} onToggle={toggleBlocked} />
+          <BlockedPage items={blocked} onToggle={toggleBlocked} loading={loading} error={error} />
         ) : filteredDigimon.length === 0 ? (
           <div className="status-message">No se encontraron Digimon para "{search}".</div>
         ) : (
